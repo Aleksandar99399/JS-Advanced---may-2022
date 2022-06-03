@@ -1,17 +1,16 @@
+'use strict'
 window.addEventListener("load", solve);
 
 function solve() {
-  let addPost = {
-    h4: '',
-    firstP: '',
-    secondP: ''
-  }
+  let editObject = {};
+  let publishObject = {};
+
   let publishButton = document.querySelector("#publish-btn");
   let ulDom = document.querySelector('#review-list');
 
-  let titleText
-  let categoryText
-  let contentText
+  let title
+  let category
+  let content
 
 
   let editButton;
@@ -21,15 +20,24 @@ function solve() {
     let liDom = ulDom.appendChild(document.createElement('li'));
     liDom.classList.add('rpost');
 
-     titleText = document.querySelector('#post-title').value;
-     categoryText = document.querySelector('#post-category').value;
-     contentText = document.querySelector('#post-content').value;
-
+    title = document.querySelector('#post-title');
+    category = document.querySelector('#post-category');
+    content = document.querySelector('#post-content');
+    publishObject.title = title
+    publishObject.category = category
+    publishObject.content = content
 
     let articleDom = liDom.appendChild(document.createElement('article'));
-    articleDom.appendChild(document.createElement('h4')).setAttribute('id', 'category-paragraph');
-    articleDom.appendChild(document.createElement('p')).setAttribute('id', 'category-paragraph');
-    articleDom.appendChild(document.createElement('p')).innerHTML = contentText.value;
+    let htmlHeadingElement = articleDom.appendChild(document.createElement('h4'))
+    let categoryParagraph = articleDom.appendChild(document.createElement('p'))
+    let contentParagraph = articleDom.appendChild(document.createElement('p'))
+
+    htmlHeadingElement.innerHTML = title.value;
+    categoryParagraph.innerHTML = 'Category: ' + category.value;
+    contentParagraph.innerHTML = 'Content: ' + content.value;
+    categoryParagraph.setAttribute('id', 'category-paragraph')
+    contentParagraph.setAttribute('id', 'content-paragraph')
+
 
     editButton = liDom.appendChild(document.createElement('button'));
     editButton.classList.add('action-btn', 'edit');
@@ -38,24 +46,34 @@ function solve() {
     editButton.textContent = 'Edit'
     approveButton.textContent = 'Approve'
 
-    titleText.value = ''
-    categoryText.value = ''
-    contentText.value = ''
+    publishObject.title.value = ''
+    publishObject.category.value = ''
+    publishObject.content.value = ''
+
+    editObject.h4 = htmlHeadingElement;
+    editObject.categoryP = categoryParagraph;
+    editObject.contentP = contentParagraph;
+    editObject.editButton = editButton;
+    editObject.approveButton = approveButton;
+
 
   })
 
-  if (editButton !== undefined) {
-    editButton.addEventListener('click', function (e) {
-      let h4 = document.querySelector('h4');
-      let firstP = document.querySelector('p').firstChild;
-      let secondP = document.querySelector('p').lastChild;
-
-    })
-  }
+  editObject.editButton.addEventListener('click', function (){
+    console.log('In edit event listener')
+    editPost(editObject, publishObject);
+  })
 
 }
 
-function publishPost(){
-  console.log('asdasdasd')
+function editPost(editObject, publishObject){
+  publishObject.title.value = editObject.h4.innerHTML;
+  publishObject.category.value = editObject.categoryP.innerHTML.split("Category: ");
+  publishObject.content.value = editObject.contentP.innerHTML.split("Content: ");
+  editObject.editButton.remove();
+  editObject.approveButton.remove();
+
+  editObject.h4.innerHTML = '';
+  editObject.categoryP.innerHTML = '';
+  editObject.contentP.innerHTML = '';
 }
-publishPost()
